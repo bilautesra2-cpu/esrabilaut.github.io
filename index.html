@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - View Submissions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #003366;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <a href="index2.html" class="back-link">&larr; Back to Website</a>
+  <h1>Admin Panel - Form Submissions</h1>
+  <table id="submissionsTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody id="submissionsBody">
+      <!-- Submissions will be loaded here -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSubmissions();
+    });
+
+    function loadSubmissions() {
+      const submissions = JSON.parse(localStorage.getItem('contactSubmissions')) || [];
+      const tbody = document.getElementById('submissionsBody');
+
+      if (submissions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="no-data">No submissions yet.</td></tr>';
+        return;
+      }
+
+      submissions.forEach((submission, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${submission.name}</td>
+          <td>${submission.email}</td>
+          <td>${submission.message}</td>
+          <td>${new Date(submission.timestamp).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Bagian HEAD: pengaturan dan informasi halaman -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website sederhana belajar HTML5 dasar">
+  <meta name="author" content="Esra Bilaut">
+  <title>Belajar HTML5 Dasar</title>
+
+  <!-- Favicon dan CSS -->
+  <link rel="icon" href="favicon.ico">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: #003366;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    main {
+      padding: 20px;
+    }
+    article {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    footer {
+      font-size: 0.9em;
+    }
+    /* Form Styles */
+    #contact-form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    #contact-form h3 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #003366;
+      box-shadow: 0 0 5px rgba(0,51,102,0.3);
+    }
+    input:invalid, textarea:invalid {
+      border-color: #ff6b6b;
+    }
+    input:valid, textarea:valid {
+      border-color: #51cf66;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #003366 0%, #005580 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #005580 0%, #0077a3 100%);
+      transform: translateY(-2px);
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .success {
+      color: #51cf66;
+    }
+    .error {
+      color: #ff6b6b;
+    }
+    .shake {
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>Website Belajar HTML5</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Artikel</a>
+      <a href="#">Kontak</a>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <section>
+      <article>
+        <h2>Apa itu HTML5?</h2>
+        <p><strong>HTML5</strong> adalah versi terbaru dari HTML (HyperText Markup Language) yang digunakan untuk membuat dan menampilkan halaman web.</p>
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="Logo HTML5" width="120">
+          <figcaption>Logo resmi HTML5</figcaption>
+        </figure>
+      </article>
+
+      <article>
+        <h2>Keunggulan HTML5</h2>
+        <ul>
+          <li>Struktur kode lebih semantik</li>
+          <li>Mendukung video dan audio tanpa plugin</li>
+          <li>Responsif untuk berbagai perangkat</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- FORMULIR -->
+    <section>
+      <h3>Formulir Kontak</h3>
+      <form id="contactForm" action="#" method="post">
+        <div class="form-group">
+          <label for="nama">Nama:</label>
+          <input type="text" id="nama" name="nama" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="pesan">Pesan:</label>
+          <textarea id="pesan" name="pesan" rows="4" required></textarea>
+        </div>
+        <button id="submitBtn" type="submit">Kirim</button>
+      </form>
+      <div id="message"></div>
+    </section>
+
+    <!-- ADMIN SECTION -->
+    <section id="adminSection">
+      <h3>Admin Panel</h3>
+      <button id="showAdminBtn">Show Admin</button>
+      <div id="adminContent" style="display: none;">
+        <input type="password" id="adminPassword" placeholder="Enter password">
+        <button id="loginBtn">Login</button>
+        <div id="submissions" style="margin-top: 20px;"></div>
+        <p><a href="admin.html" target="_blank">View All Submissions in Admin Page</a></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Esra Bilaut — Website Belajar HTML5 Dasar</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('contactForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const messageDiv = document.getElementById('message');
+      const inputs = form.querySelectorAll('input, textarea');
+
+      // Admin elements
+      const showAdminBtn = document.getElementById('showAdminBtn');
+      const adminContent = document.getElementById('adminContent');
+      const loginBtn = document.getElementById('loginBtn');
+      const adminPassword = document.getElementById('adminPassword');
+      const submissionsDiv = document.getElementById('submissions');
+
+      // Real-time validation feedback
+      inputs.forEach(input => {
+        input.addEventListener('input', function() {
+          validateField(this);
+        });
+        input.addEventListener('blur', function() {
+          validateField(this);
+        });
+      });
+
+      function validateField(field) {
+        const value = field.value.trim();
+        let isValid = true;
+
+        if (field.type === 'email') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          isValid = emailRegex.test(value);
+        } else if (field.tagName === 'TEXTAREA') {
+          isValid = value.length >= 10; // Minimum message length
+        } else {
+          isValid = value.length > 0;
+        }
+
+        if (!isValid && field.value !== '') {
+          field.classList.add('shake');
+          setTimeout(() => field.classList.remove('shake'), 500);
+        }
+
+        return isValid;
+      }
+
+      function saveSubmission(data) {
+        const submissions = JSON.parse(localStorage.getItem('contactSubmissions')) || [];
+        submissions.push(data);
+        localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
+      }
+
+      function displaySubmissions() {
+        const submissions = JSON.parse(localStorage.getItem('contactSubmissions')) || [];
+        if (submissions.length === 0) {
+          submissionsDiv.innerHTML = '<p>No submissions yet.</p>';
+          return;
+        }
+
+        let tableHTML = `
+          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+              <tr style="background-color: #003366; color: white;">
+                <th style="padding: 10px; border: 1px solid #ddd;">#</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Email</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Message</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        submissions.forEach((submission, index) => {
+          tableHTML += `
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">${index + 1}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${submission.name}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${submission.email}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${submission.message}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${new Date(submission.timestamp).toLocaleString()}</td>
+            </tr>
+          `;
+        });
+
+        tableHTML += '</tbody></table>';
+        submissionsDiv.innerHTML = tableHTML;
+      }
+
+      // Admin event listeners
+      showAdminBtn.addEventListener('click', function() {
+        adminContent.style.display = 'block';
+      });
+
+      loginBtn.addEventListener('click', function() {
+        if (adminPassword.value === 'admin123') {
+          displaySubmissions();
+          adminPassword.value = '';
+        } else {
+          alert('Incorrect password!');
+        }
+      });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        let isFormValid = true;
+        inputs.forEach(input => {
+          if (!validateField(input)) {
+            isFormValid = false;
+          }
+        });
+
+        if (!isFormValid) {
+          messageDiv.textContent = 'Harap lengkapi semua field dengan benar.';
+          messageDiv.className = 'error';
+          return;
+        }
+
+        // Save form data to localStorage
+        const formData = {
+          name: document.getElementById('nama').value,
+          email: document.getElementById('email').value,
+          message: document.getElementById('pesan').value,
+          timestamp: new Date().toISOString()
+        };
+        saveSubmission(formData);
+
+        // Simulate form submission
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Mengirim...';
+
+        setTimeout(() => {
+          messageDiv.textContent = 'Pesan berhasil dikirim! Terima kasih.';
+          messageDiv.className = 'success';
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Kirim';
+
+          // Clear message after 5 seconds
+          setTimeout(() => {
+            messageDiv.textContent = '';
+            messageDiv.className = '';
+          }, 5000);
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
